@@ -6,12 +6,12 @@
 //GND to GND pin
 //SDA to A4
 //SCL to A5
-// #LPG Sensor MQ3
+// #LPG Sensor MQ6
 //VCC 5V
 //GND GND
 //AD A3
 //D0 D6
-// #Alc Sensor MQ6
+// #Alc Sensor MQ3
 //VCC 5V
 //GND GND
 //AD A2
@@ -336,9 +336,9 @@ float* form_array_all(){
   arr[2] = get_co_ppm();
   arr[3] = get_no2_ppm();
   arr[4] = get_nh3_ppm();
-  arr[5] = (float)get_alcohol_raw();
-  arr[6] = (float)get_hcho_raw();
-  arr[7] = (float)get_lpg_raw();
+  arr[5] = (float)myMQ3.get_alcohol_raw();
+  arr[6] = (float)myGroveHCHO.get_hcho_raw();
+  arr[7] = (float)myMQ6.get_lpg_raw();
   arr[8] = get_temp_c();
   arr[9] = get_pressure_pa();
   arr[10] = get_altitude_m();
@@ -432,11 +432,11 @@ void loop() {
   // put your main code here, to run repeatedly:
   for(int i=0; i<100; i++){
 //    int* a = gen_array(5);
-//    float *a = form_array_all();
-//    print_array_float(a, data_vars);
-//    free(a);
-    float t = myMQ3.get_alcohol_ppm();
-    Serial.print(t);
+    float *a = form_array_all();
+    print_array_float(a, data_vars);
+    free(a);
+//    float t = myMQ3.get_alcohol_ppm();
+//    Serial.print(t);
     Serial.print("\n");
   }
 }

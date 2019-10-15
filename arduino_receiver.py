@@ -5,7 +5,7 @@ import csv
 
 COM_PORT = 'COM7'
 BAUD_PATES = 9600
-# ser = serial.Serial(COM_PORT, BAUD_PATES)
+ser = serial.Serial(COM_PORT, BAUD_PATES)
 
 # serial_record = 
 
@@ -24,7 +24,7 @@ def add_tag(tag, data_array):
     return data_array
 
 def show_all_data(data_array_T):
-    shape = data_array_T.shape()
+    shape = data_array_T.shape
     x_axis = np.arange(0, shape[1], 1)
     plt.plot(x_axis, data_array_T[0], label='CO2 ppm')
     plt.legend()
@@ -47,26 +47,34 @@ def store_data(file_name, data_array):
 
     with open(file_name, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
-        #Check is Numpy array or not
+        # Check is Numpy array or not
         # if type(data_array) == class_list:
             # for in range():
                 # print()
+        writer.writerows(data_array)
 
 def get_serial_data(ser):
+    i = 0
+    temp_arr = []
     try:
         while True:
-            # i = 0
-            temp_arr = []
+            
             while ser.in_waiting:
                 data_raw = ser.readline()
                 data = data_raw.decode()
-                print('Raw Data ', data_raw)
-                print('Data ', data)
+                # print('Raw Data ', data_raw)
+                # print('Data ', data)
                 
+                data = data[:-1]
                 str_arr = data.split(',')
-                if len(str_arr) == 8:
+                if len(str_arr) == 12 and str_arr[0] != '-1.00' and str_arr[1] != '-1.00':
                     temp_arr.append(str_arr)
-                # i = i + 1
+                    i = i + 1
+                    # print('\r')
+                    print('Collecting valid data ', i, '...', end='\r')
+                else:
+                    # print('\r')
+                    print('\rWait for valid data', end='\r')
 
     except KeyboardInterrupt:
         ser.close()
@@ -83,3 +91,11 @@ def get_serial_data(ser):
 # for i in range(param_num):
 
 # setting an array element with a sequence.
+
+temp_arr = get_serial_data(ser)
+tag_arr = add_tag('context', temp_arr)
+store_data('context.data', tag_arr)
+
+float_arr = convert_data(temp_arr)
+float_arr = float_arr.transpose()
+show_all_data(float_arr)
