@@ -93,8 +93,11 @@ def get_serial_data(ser):
 # setting an array element with a sequence.
 
 temp_arr = get_serial_data(ser)
-tag_arr = add_tag('context', temp_arr)
-store_data('context.data', tag_arr)
+tag_arr = add_tag('sample1', temp_arr)
+store_data('sample1.data', tag_arr)
+
+# tag_arr = add_tag('context1', temp_arr)
+# store_data('context1.data', tag_arr)
 
 float_arr = convert_data(temp_arr)
 float_arr = float_arr.transpose()
